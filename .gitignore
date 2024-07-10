@@ -1,0 +1,7 @@
+*
+!.gitignore
+!mdsp.c
+!mdsp.h
+!main.cpp
+!test.cpp 
+!Makefile
