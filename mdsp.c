@@ -10,22 +10,24 @@
 //generate twinkle coe and bit reverse
 void fft_init(fft *obj,unsigned int n,double *wr,double *wi,unsigned int *br)
 {
-	unsigned int r;
-	unsigned int i;
-
-	r = (unsigned int)(log((double)n)/log((double)2));
+	unsigned int i,j;
 
 	obj->n = n;
 	obj->wr = wr;
 	obj->wi = wi;
 	obj->br = br;
 
+	//use dp generate bit reverse map
 	br[0] = 0;
-	for(i = 1;i < n;i++)
+	for(i = 1;i < n;i = (i<<1))
 	{
-		br[i] = (br[i>>1]>>1)|((i&1)<<(r-1));
+		for(j = i;j < (i<<1);j++)
+		{
+			br[j] = br[j-i] + n/(i<<1);
+		}
 	}
 
+	//generate twinkle coe
 	for(i = 0;i < n/2;i++)
 	{
 		wr[i] = cos(2.0*PI*1.0/n*i);
