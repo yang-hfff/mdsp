@@ -37,7 +37,7 @@ void fft_init(fft *obj,unsigned int n,double *wr,double *wi,unsigned int *br)
 //fft base 2
 void fft2(fft *obj,double *re,double *im)
 {
-	unsigned int i,j,k,u,d;
+	unsigned int i,j,k,u,d,di,wn;
 	double tr,ti;
 
 	//bit reverse
@@ -55,9 +55,10 @@ void fft2(fft *obj,double *re,double *im)
 	}
 
 
-	for(i = 1;i < obj->n;i *= 2)
+	for(i = 1;i < obj->n;i = di)
 	{
-		for(j = 0;j < obj->n;j += 2*i)
+		di = (i << 1);
+		for(j = 0;j < obj->n;j += di)
 		{
 			for(k = 0;k < i;k += 1)
 			{
@@ -65,11 +66,14 @@ void fft2(fft *obj,double *re,double *im)
 				u = j+k;
 				d = j+k+i;
 
+				//index of w
+				wn = k*obj->n/(di);
+
 				//twinkle
 				tr = re[d];
 				ti = im[d];
-				re[d] = obj->wr[k*obj->n/(2*i)]*tr - obj->wi[k*obj->n/(2*i)]*ti;
-				im[d] = obj->wr[k*obj->n/(2*i)]*ti + obj->wi[k*obj->n/(2*i)]*tr;
+				re[d] = obj->wr[wn]*tr - obj->wi[wn]*ti;
+				im[d] = obj->wr[wn]*ti + obj->wi[wn]*tr;
 
 				//butterfly
 				tr = re[u];
@@ -90,7 +94,7 @@ void fft2(fft *obj,double *re,double *im)
 //ifft base 2
 void ifft2(fft *obj,double *re,double *im)
 {
-	unsigned int i,j,k,u,d;
+	unsigned int i,j,k,u,d,di,wn;
 	double tr,ti;
 
 	//bit reverse
@@ -108,9 +112,10 @@ void ifft2(fft *obj,double *re,double *im)
 	}
 
 
-	for(i = 1;i < obj->n;i *= 2)
+	for(i = 1;i < obj->n;i = di)
 	{
-		for(j = 0;j < obj->n;j += 2*i)
+		di = (i << 1);
+		for(j = 0;j < obj->n;j += di)
 		{
 			for(k = 0;k < i;k += 1)
 			{
@@ -118,11 +123,14 @@ void ifft2(fft *obj,double *re,double *im)
 				u = j+k;
 				d = j+k+i;
 
+				//index of w
+				wn = k*obj->n/(di);
+
 				//twinkle
 				tr = re[d];
 				ti = im[d];
-				re[d] = obj->wr[k*obj->n/(2*i)]*tr + obj->wi[k*obj->n/(2*i)]*ti;
-				im[d] = obj->wr[k*obj->n/(2*i)]*ti - obj->wi[k*obj->n/(2*i)]*tr;
+				re[d] = obj->wr[wn]*tr + obj->wi[wn]*ti;
+				im[d] = obj->wr[wn]*ti - obj->wi[wn]*tr;
 
 				//butterfly
 				tr = re[u];
