@@ -4,13 +4,13 @@
 
 using namespace std;
 
-#define N 16777216
+#define N 65536
 
 int main(int argc,char *argv[])
 {
 	fft f;
-	static double wr[N];
-	static double wi[N];
+	static double wr[N/2];
+	static double wi[N/2];
 	static unsigned int br[N];
 
 	//prepare

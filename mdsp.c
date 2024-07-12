@@ -1,16 +1,8 @@
-/***
-*mdsp.c - definitions for digital signal process
-*
-*       Copyright (c) Yang Haifeng. All rights reserved.
-*
-*Purpose:
-*       This file contains fft&ifft,fir&iir(filter part are not complete yet!!!)
-*       this library is suitable for every version of c/c++,and suitable for every machine.
-*       [ANSI-C/C99/C11/C++]
-*
-*       [Public]
-*
-****/
+/*************************************************************
+ * Copyright (C) 2024-07-12 Yang Haifeng. All rights reserved.
+ *
+ * This code is licensed under the MIT license
+ *************************************************************/
 #include "mdsp.h"
 #include "math.h"
 
@@ -34,7 +26,7 @@ void fft_init(fft *obj,unsigned int n,double *wr,double *wi,unsigned int *br)
 		br[i] = (br[i>>1]>>1)|((i&1)<<(r-1));
 	}
 
-	for(i = 0;i < n;i++)
+	for(i = 0;i < n/2;i++)
 	{
 		wr[i] = cos(2.0*PI*1.0/n*i);
 		wi[i] = -1.0*sin(2.0*PI*1.0/n*i);
@@ -48,7 +40,7 @@ void fft2(fft *obj,double *re,double *im)
 	unsigned int i,j,k;
 	double tr,ti;
 
-	//bit reverse(can n->n/2?)
+	//bit reverse
 	for(i = 0;i < obj->n;i++)
 	{
 		if(i < obj->br[i])

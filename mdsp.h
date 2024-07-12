@@ -1,16 +1,8 @@
-/***
-*mdsp.h - definitions for digital signal process
-*
-*       Copyright (c) Yang Haifeng. All rights reserved.
-*
-*Purpose:
-*       This file contains fft&ifft,fir&iir(filter part are not complete yet!!!)
-*       this library is suitable for every version of c/c++,and suitable for every machine.
-*       [ANSI-C/C99/C11/C++]
-*
-*       [Public]
-*
-****/
+/*************************************************************
+ * Copyright (C) 2024-07-12 Yang Haifeng. All rights reserved.
+ *
+ * This code is licensed under the MIT license
+ *************************************************************/
 #ifndef __MDSP_H
 #define __MDSP_H
 
@@ -27,7 +19,7 @@ typedef struct
 {
 	unsigned int n;
 	unsigned int *br;
-	double *wr;  /*(can n->n/2?)*/
+	double *wr;  
 	double *wi;
 }fft;
 
