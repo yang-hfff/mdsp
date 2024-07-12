@@ -37,7 +37,7 @@ void fft_init(fft *obj,unsigned int n,double *wr,double *wi,unsigned int *br)
 //fft base 2
 void fft2(fft *obj,double *re,double *im)
 {
-	unsigned int i,j,k;
+	unsigned int i,j,k,u,d;
 	double tr,ti;
 
 	//bit reverse
@@ -61,19 +61,23 @@ void fft2(fft *obj,double *re,double *im)
 		{
 			for(k = 0;k < i;k += 1)
 			{
+				//up and down branch
+				u = j+k;
+				d = j+k+i;
+
 				//twinkle
-				tr = re[j+k+i];
-				ti = im[j+k+i];
-				re[j+k+i] = obj->wr[k*obj->n/(2*i)]*tr - obj->wi[k*obj->n/(2*i)]*ti;
-				im[j+k+i] = obj->wr[k*obj->n/(2*i)]*ti + obj->wi[k*obj->n/(2*i)]*tr;
+				tr = re[d];
+				ti = im[d];
+				re[d] = obj->wr[k*obj->n/(2*i)]*tr - obj->wi[k*obj->n/(2*i)]*ti;
+				im[d] = obj->wr[k*obj->n/(2*i)]*ti + obj->wi[k*obj->n/(2*i)]*tr;
 
 				//butterfly
-				tr = re[j+k];
-				ti = im[j+k];
-				re[j+k] = tr + re[j+k+i];
-				im[j+k] = ti + im[j+k+i];
-				re[j+k+i] = tr - re[j+k+i];
-				im[j+k+i] = ti - im[j+k+i];
+				tr = re[u];
+				ti = im[u];
+				re[u] = tr + re[d];
+				im[u] = ti + im[d];
+				re[d] = tr - re[d];
+				im[d] = ti - im[d];
 			}
 		}
 	}
@@ -86,7 +90,7 @@ void fft2(fft *obj,double *re,double *im)
 //ifft base 2
 void ifft2(fft *obj,double *re,double *im)
 {
-	unsigned int i,j,k;
+	unsigned int i,j,k,u,d;
 	double tr,ti;
 
 	//bit reverse
@@ -110,19 +114,23 @@ void ifft2(fft *obj,double *re,double *im)
 		{
 			for(k = 0;k < i;k += 1)
 			{
+				//up and down branch
+				u = j+k;
+				d = j+k+i;
+
 				//twinkle
-				tr = re[j+k+i];
-				ti = im[j+k+i];
-				re[j+k+i] = obj->wr[k*obj->n/(2*i)]*tr + obj->wi[k*obj->n/(2*i)]*ti;
-				im[j+k+i] = obj->wr[k*obj->n/(2*i)]*ti - obj->wi[k*obj->n/(2*i)]*tr;
+				tr = re[d];
+				ti = im[d];
+				re[d] = obj->wr[k*obj->n/(2*i)]*tr + obj->wi[k*obj->n/(2*i)]*ti;
+				im[d] = obj->wr[k*obj->n/(2*i)]*ti - obj->wi[k*obj->n/(2*i)]*tr;
 
 				//butterfly
-				tr = re[j+k];
-				ti = im[j+k];
-				re[j+k] = tr + re[j+k+i];
-				im[j+k] = ti + im[j+k+i];
-				re[j+k+i] = tr - re[j+k+i];
-				im[j+k+i] = ti - im[j+k+i];
+				tr = re[u];
+				ti = im[u];
+				re[u] = tr + re[d];
+				im[u] = ti + im[d];
+				re[d] = tr - re[d];
+				im[d] = ti - im[d];
 			}
 		}
 	}
