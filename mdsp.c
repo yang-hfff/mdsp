@@ -66,10 +66,10 @@ void fft2(fft *obj,FLOATTYPE *re,FLOATTYPE *im)
 			{
 				//up and down branch
 				u = j+k;
-				d = j+k+i;
+				d = u+i;
 
 				//index of w
-				wn = k*obj->n/(di);
+				wn = (k*obj->n)/(di);
 
 				//twinkle
 				tr = re[d];
@@ -123,10 +123,10 @@ void ifft2(fft *obj,FLOATTYPE *re,FLOATTYPE *im)
 			{
 				//up and down branch
 				u = j+k;
-				d = j+k+i;
+				d = u+i;
 
 				//index of w
-				wn = k*obj->n/(di);
+				wn = (k*obj->n)/(di);
 
 				//twinkle
 				tr = re[d];
@@ -145,4 +145,36 @@ void ifft2(fft *obj,FLOATTYPE *re,FLOATTYPE *im)
 		}
 	}
 }
+
+
+//imag-real to polar form
+void eular1(INTTYPE n,FLOATTYPE *re,FLOATTYPE *im)
+{
+	INTTYPE i;
+	FLOATTYPE temp;
+
+	for(i = 0;i < n;i++)
+	{
+		temp = re[i];
+		re[i] = (FLOATTYPE)sqrt(temp*temp + im[i]*im[i]);
+		im[i] = (FLOATTYPE)atan2(im[i],temp);
+	}
+}
+
+//polar to imag-real form
+void eular2(INTTYPE n,FLOATTYPE *am,FLOATTYPE *rho)
+{
+	INTTYPE i;
+	FLOATTYPE temp;
+
+	for(i = 0;i < n;i++)
+	{
+		temp = am[i];
+		am[i] = (FLOATTYPE)(temp*cos(rho[i]));
+		rho[i] = (FLOATTYPE)(temp*sin(rho[i]));
+	}
+}
+
+
+
 
