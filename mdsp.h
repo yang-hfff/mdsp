@@ -30,7 +30,8 @@ typedef struct
 void fft_init(fft *obj,INTTYPE n,FLOATTYPE *w,INTTYPE *br);
 void fft2(fft *obj,FLOATTYPE *re,FLOATTYPE *im);
 void ifft2(fft *obj,FLOATTYPE *re,FLOATTYPE *im);
-
+void eular1(INTTYPE n,FLOATTYPE *re,FLOATTYPE *im);
+void eular2(INTTYPE n,FLOATTYPE *am,FLOATTYPE *rho);
 
 #ifdef __cplusplus
 }
