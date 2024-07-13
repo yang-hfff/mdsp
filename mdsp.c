@@ -8,13 +8,13 @@
 
 
 //generate twinkle coe and bit reverse
-void fft_init(fft *obj,unsigned int n,double *wr,double *wi,unsigned int *br)
+void fft_init(fft *obj,INTTYPE n,FLOATTYPE *w,INTTYPE *br)
 {
-	unsigned int i,j;
+	INTTYPE i,j;
 
 	obj->n = n;
-	obj->wr = wr;
-	obj->wi = wi;
+	obj->wr = w;
+	obj->wi = w + n/2;
 	obj->br = br;
 
 	//use dp generate bit reverse map
@@ -30,17 +30,17 @@ void fft_init(fft *obj,unsigned int n,double *wr,double *wi,unsigned int *br)
 	//generate twinkle coe
 	for(i = 0;i < n/2;i++)
 	{
-		wr[i] = cos(2.0*PI*1.0/n*i);
-		wi[i] = -1.0*sin(2.0*PI*1.0/n*i);
+		obj->wr[i] = (FLOATTYPE)cos(2.0*PI*1.0/n*i);
+		obj->wi[i] = (FLOATTYPE)(-1.0*sin(2.0*PI*1.0/n*i));
 	}
 }
 
 
 //fft base 2
-void fft2(fft *obj,double *re,double *im)
+void fft2(fft *obj,FLOATTYPE *re,FLOATTYPE *im)
 {
-	unsigned int i,j,k,u,d,di,wn;
-	double tr,ti;
+	INTTYPE i,j,k,u,d,di,wn;
+	FLOATTYPE tr,ti;
 
 	//bit reverse
 	for(i = 0;i < obj->n;i++)
@@ -94,10 +94,10 @@ void fft2(fft *obj,double *re,double *im)
 
 
 //ifft base 2
-void ifft2(fft *obj,double *re,double *im)
+void ifft2(fft *obj,FLOATTYPE *re,FLOATTYPE *im)
 {
-	unsigned int i,j,k,u,d,di,wn;
-	double tr,ti;
+	INTTYPE i,j,k,u,d,di,wn;
+	FLOATTYPE tr,ti;
 
 	//bit reverse
 	for(i = 0;i < obj->n;i++)

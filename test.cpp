@@ -9,16 +9,15 @@ using namespace std;
 int main(int argc,char *argv[])
 {
 	fft f;
-	static double wr[N/2];
-	static double wi[N/2];
-	static unsigned int br[N];
-	static double xr[N];
-	static double xi[N];
+	static FLOATTYPE w[N];
+	static INTTYPE br[N];
+	static FLOATTYPE xr[N];
+	static FLOATTYPE xi[N];
 	clock_t startTime,endTime;
 	
 	//prepare
 	startTime = clock();
-	fft_init(&f,N,wr,wi,br);
+	fft_init(&f,N,w,br);
 	endTime = clock();
 	cout << "init used time:"  << double(endTime - startTime) / CLOCKS_PER_SEC << "s" << endl;
 	

@@ -9,15 +9,14 @@ using namespace std;
 int main(int argc,char *argv[])
 {
 	fft f;
-	static double wr[N/2];
-	static double wi[N/2];
-	static unsigned int br[N];
+	static FLOATTYPE w[N];
+	static INTTYPE br[N];
 
 	//prepare
-	fft_init(&f,N,wr,wi,br);
+	fft_init(&f,N,w,br);
 
-	static double xr[N];
-	static double xi[N];
+	static FLOATTYPE xr[N];
+	static FLOATTYPE xi[N];
 
 	//give x value
 	for(unsigned int i = 0;i < N;i++)

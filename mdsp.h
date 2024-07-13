@@ -6,27 +6,30 @@
 #ifndef __MDSP_H
 #define __MDSP_H
 
-#ifndef PI
-#define PI 3.14159265358979323846
-#endif /*PI*/
-
 #ifdef __cplusplus
 extern "C"{
 #endif /*__cplusplus*/
 
+#ifndef PI
+#define PI 3.14159265358979323846
+#endif /*PI*/
+
+#define FLOATTYPE double
+#define INTTYPE	unsigned int
+
 /*declaration of fft object*/
 typedef struct 
 {
-	unsigned int n;
-	unsigned int *br;
-	double *wr;  
-	double *wi;
+	INTTYPE n;
+	INTTYPE *br;
+	FLOATTYPE *wr;  
+	FLOATTYPE *wi;
 }fft;
 
 /* Function prototypes */
-void fft_init(fft *obj,unsigned int n,double *wr,double *wi,unsigned int *br);
-void fft2(fft *obj,double *re,double *im);
-void ifft2(fft *obj,double *re,double *im);
+void fft_init(fft *obj,INTTYPE n,FLOATTYPE *w,INTTYPE *br);
+void fft2(fft *obj,FLOATTYPE *re,FLOATTYPE *im);
+void ifft2(fft *obj,FLOATTYPE *re,FLOATTYPE *im);
 
 
 #ifdef __cplusplus
