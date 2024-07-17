@@ -7,6 +7,8 @@
 #include "math.h"
 
 
+#define square(x)	((x)*(x))
+
 //generate twinkle coe and bit reverse
 void fft_init(fft *obj,INTTYPE n,FLOATTYPE *w,INTTYPE *br)
 {
@@ -175,6 +177,157 @@ void eular2(INTTYPE n,FLOATTYPE *am,FLOATTYPE *rho)
 	}
 }
 
+
+//the first type of modified
+//zero order Bessel function
+static FLOATTYPE bessel0_c1(FLOATTYPE x)
+{
+	INTTYPE j = 1,m,mj = 1;
+	FLOATTYPE y = 1;
+
+	for(m = 1;m < 25;m++)
+	{
+		mj = mj*m;
+		y += (FLOATTYPE)square(pow((double)x/2.0,(double)m)/mj);
+	}
+
+	return y;
+}
+
+//geneter window factor
+void window(INTTYPE n,FLOATTYPE *wd,win wtype)
+{
+	INTTYPE i;
+
+	if (wtype == RECT)
+	{
+		for(i = 0;i < n;i++)
+		{
+			wd[i] = (FLOATTYPE)1.0;
+		}
+	}
+	else if (wtype == BARTLETT)
+	{
+		for(i = 0;i < n;i++)
+		{
+			
+			if(i <= (n-1)/2)
+			{
+				wd[i] = (FLOATTYPE)(2.0*i)/(n-1);
+			}
+			else 
+			{
+				wd[i] = (FLOATTYPE)2.0 - (FLOATTYPE)(2*i)/(n-1);
+			}
+		}
+	}
+	else if(wtype == KAISER)
+	{		
+		for(i = 0;i < n;i++)
+		{
+			wd[i] = bessel0_c1((FLOATTYPE)(4.583*sqrt(1.0 - square(1-2.0/(n-1)*i))))/bessel0_c1((FLOATTYPE)4.583);
+		}
+	}
+	else if (wtype == HANN)
+	{
+		for(i = 0;i < n;i++)
+		{
+			wd[i] = (FLOATTYPE)(0.5*(1.0 - cos(2.0*PI/(n-1)*i)));
+		}
+	}
+	else if (wtype == HAMM)
+	{
+		for(i = 0;i < n;i++)
+		{
+			wd[i] = (FLOATTYPE)(0.54 - 0.46*cos(2*PI/(n-1)*i));
+		}
+	}
+	else if (wtype == BLACKMAN)
+	{
+		for(i = 0;i < n;i++)
+		{
+			wd[i] = (FLOATTYPE)(0.42 - 0.5*cos(2.0*PI/(n-1)*i) + 0.08*cos(4.0*PI/(n-1)*i));
+		}
+	}
+	else if(wtype == FLATTOP)
+	{
+		for(i = 0;i < n;i++)
+		{
+			wd[i] = (FLOATTYPE)(0.21557895 - 0.41663158*cos(2.0*PI/(n-1)*i) + 0.277263158*cos(4.0*PI/(n-1)*i) - 0.083578947*cos(6.0*PI/(n-1)*i) + 0.006947368*cos(8.0*PI/(n-1)*i));
+		}
+	}
+	else if(wtype == NUTTAL)
+	{
+		for(i = 0;i < n;i++)
+		{
+			wd[i] = (FLOATTYPE)(0.3635819 - 0.4891775*cos(2.0*PI/(n-1)*i) + 0.1365995*cos(4.0*PI/(n-1)*i) - 0.010644*cos(6.0*PI/(n-1)*i));
+		}
+	}
+	else if (wtype == BLACKMAN_HARRIS)
+	{
+		for(i = 0;i < n;i++)
+		{
+			wd[i] = (FLOATTYPE)(0.35875 - 0.48829*cos(2.0*PI/(n-1)*i) + 0.14128*cos(4.0*PI/(n-1)*i) - 0.01168*cos(6.0*PI/(n-1)*i));
+		}
+	}
+}
+
+
+
+
+//get Amplitude(PEAK-PEAK) correction factor
+FLOATTYPE getAMPCorrectFactor(INTTYPE n,FLOATTYPE *wd)
+{
+	INTTYPE i;
+	FLOATTYPE sum = 0;
+
+	for(i = 0;i < n;i++)
+	{
+		sum += wd[i];
+	}
+
+	return (FLOATTYPE)n/sum;
+}
+
+
+//get power(RMS) correction factor
+FLOATTYPE getPWRCorrectFactor(INTTYPE n,FLOATTYPE *wd)
+{
+	INTTYPE i;
+	FLOATTYPE sum = 0;
+
+	for(i = 0;i < n;i++)
+	{
+		sum += square(wd[i]);
+	}
+
+	return (FLOATTYPE)sqrt(n/sum);
+}
+
+
+//use different generate sine wave
+void osc_conifg(osc *obj,FLOATTYPE a,FLOATTYPE w,FLOATTYPE p)
+{
+	const FLOATTYPE r = 1;
+
+	obj->b = (FLOATTYPE)(-2.0*r*cos(w));
+	obj->c = (FLOATTYPE)(r*r);
+	obj->y_2 = (FLOATTYPE)(a*cos(p));
+	obj->y_1 = (FLOATTYPE)(a*cos(p)*cos(w) - a*sin(p)*sin(w));
+}
+
+
+//oscillator iter
+FLOATTYPE osc_generate(osc *obj)
+{
+	FLOATTYPE y;
+
+	y = -1*obj->b*obj->y_1 - obj->c*obj->y_2;
+	obj->y_2 = obj->y_1;
+	obj->y_1 = y;
+	
+	return y;
+}
 
 
 

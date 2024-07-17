@@ -7,3 +7,6 @@
 !Makefile
 !README.md
 !README_zh.md
+!win_test.cpp 
+!correct_test.cpp
+!osc_test.cpp
