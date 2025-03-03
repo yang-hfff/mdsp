@@ -329,5 +329,46 @@ FLOATTYPE osc_generate(osc *obj)
 	return y;
 }
 
+//DCT
+void dct(FLOATTYPE *in,FLOATTYPE *out,INTTYPE len) 
+{
+    INTTYPE n,m;    
+    for (m = 0; m < len; m++) 
+    {
+        out[m] = 0;
+        for (n = 0; n < len; n++) 
+        {
+            out[m] += in[n] * cos(PI * ((FLOATTYPE)n+0.5) * m / len);
+        }
+        if(m == 0)
+        {
+            out[m] *= sqrt(1.0/len);
+        }
+        else
+        {
+            out[m] *= sqrt(2.0/len);
+        }
+    }
+}
 
+//IDCT
+void idct(FLOATTYPE *in,FLOATTYPE *out,INTTYPE len) 
+{
+    INTTYPE m,n;
+    for (n = 0; n < len; n++) 
+    {
+        out[n] = 0;
+        for (m = 0; m < len; m++) 
+        {
+            if(m == 0) 
+            {
+                out[n] += in[m] * sqrt(1.0/len);
+            }
+            else 
+            {
+                out[n] += in[m] * cos(PI * ((FLOATTYPE)n+0.5) * m / len) *sqrt(2.0/len);
+            }
+        }
+    }
+}
 

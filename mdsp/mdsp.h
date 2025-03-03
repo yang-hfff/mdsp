@@ -64,6 +64,8 @@ FLOATTYPE getAMPCorrectFactor(INTTYPE n,FLOATTYPE *wd);
 FLOATTYPE getPWRCorrectFactor(INTTYPE n,FLOATTYPE *wd);
 void osc_conifg(osc *obj,FLOATTYPE a,FLOATTYPE w,FLOATTYPE p);
 FLOATTYPE osc_generate(osc *obj);
+void dct(FLOATTYPE *in,FLOATTYPE *out,INTTYPE len);
+void idct(FLOATTYPE *in,FLOATTYPE *out,INTTYPE len);
 
 #ifdef __cplusplus
 }
